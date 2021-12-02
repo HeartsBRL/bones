@@ -292,12 +292,15 @@ void zero_pos_1() {
   ////
 }
 
-void leg_test(){
-int not_used = 0;
+void leg_test() {
+  long pos1 = 0;
+  long pos2 = 0;
+  long pos3 = 0;
+  int not_used = 0;
   RMD_ID = 0x141;
   frameTx.id = RMD_ID;
   GenPos = 0;
-Serial.println("Ready? Press a key and enter to continue... ");
+  Serial.println("Ready? Press a key and enter to continue... ");
   while (!Serial.available()) {
   }; //remove this blocking function later, its just for a testing
   not_used = Serial.parseInt();
@@ -314,9 +317,52 @@ Serial.println("Ready? Press a key and enter to continue... ");
     Serial.println(GenVel);
     Serial.println("--end");
   }
+  //--
+  Serial.println("Input actuator 1 position as int: ");
+  // Actuator id i.e define 1 = 0x141, velocity(check max), position
+  while (!Serial.available()) {
+  }; //remove this blocking function later, its just for a testing
+
+  if (Serial.available()) {
+    pos1 = Serial.parseInt();
+    Serial.println("Pos 2: ");
+    Serial.println(pos1);
+    Serial.println("--end");
+  }
+  //--
+  Serial.println("Input actuator 2 position as int: ");
+  // Actuator id i.e define 1 = 0x141, velocity(check max), position
+  while (!Serial.available()) {
+  }; //remove this blocking function later, its just for a testing
+
+  if (Serial.available()) {
+    pos2 = Serial.parseInt();
+    Serial.println("Pos: ");
+    Serial.println(pos2);
+    Serial.println("--end");
+  }
+  //--
+    //--
+  Serial.println("Input actuator 3 position as int: ");
+  // Actuator id i.e define 1 = 0x141, velocity(check max), position
+  while (!Serial.available()) {
+  }; //remove this blocking function later, its just for a testing
+
+  if (Serial.available()) {
+    pos3 = Serial.parseInt();
+    Serial.println("Pos: ");
+    Serial.println(pos3);
+    Serial.println("--end");
+  }
+  //--
+
+
+
+
+
   //-----
   ////
-  GenPos = 90000;
+  GenPos = pos1;
   RMD_ID = 0x141;
   frameTx.id = RMD_ID;
   frameTx.data[0] = 0xA4;
@@ -331,7 +377,7 @@ Serial.println("Ready? Press a key and enter to continue... ");
   delay(10);
   receive_bus_1();
   ////
-  GenPos = 90000;
+  GenPos = pos2;
   RMD_ID = 0x142;
   frameTx.id = RMD_ID;
   frameTx.data[0] = 0xA4;
@@ -346,7 +392,7 @@ Serial.println("Ready? Press a key and enter to continue... ");
   delay(10);
   receive_bus_1();
   ////
-  GenPos = 90000;
+  GenPos = pos3;
   RMD_ID = 0x143;
   frameTx.id = RMD_ID;
   frameTx.data[0] = 0xA4;
