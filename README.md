@@ -1,4 +1,4 @@
-# bones
+# Bones
 HEARTS BRL robot dog BONES!
 
 Actuators are RMDx8
