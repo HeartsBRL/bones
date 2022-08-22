@@ -1,0 +1,272 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro" >
+
+<xacro:property name="mesh_folder" value="package://bones_description/meshes" />
+<xacro:property name="leg_colour" value="0.2 0.2 0.3 1" />
+
+<!-- Leg joint offsets -->
+<xacro:property name="shoulder_x" value="0.2498" />
+<xacro:property name="shoulder_y" value="0.1502" />
+<xacro:property name="shoulder_z" value="0.0101" />
+
+<xacro:property name="femur_x" value="0.064" />
+<xacro:property name="femur_y" value="0.068" />
+<xacro:property name="femur_z" value="0.0" />
+
+<xacro:property name="tibia_x" value="0.1805" />
+<xacro:property name="tibia_y" value="0.029" />
+<xacro:property name="tibia_z" value="0.059" />
+
+<xacro:property name="shoulder_angle_default" value="0" />
+<xacro:property name="femur_angle_default" value="${pi/4}" />
+<xacro:property name="tibia_angle_default" value="${pi/2}" />
+
+<!-- Single leg macro. Reflection allows any of the four legs to be formed -->
+<xacro:macro name="bones_leg" params="parent reflect_x reflect_y">
+  <xacro:if value="${1+reflect_x}">
+      <xacro:property name="prefix1" value="F" />
+  </xacro:if>
+  <xacro:unless value="${1+reflect_x}">
+      <xacro:property name="prefix1" value="R" />
+  </xacro:unless>
+  <xacro:if value="${1+reflect_y}">
+    <xacro:property name="prefix" value="${prefix1}L" />
+    <xacro:property name="femur" value="femur_left" />
+  </xacro:if>
+  <xacro:unless value="${1+reflect_y}">
+    <xacro:property name="prefix" value="${prefix1}R" />
+    <xacro:property name="femur" value="femur_right" />
+  </xacro:unless>
+  
+  <link name="${prefix}1">
+    <inertial>
+      <origin
+        xyz="0.05 0.02 0"
+        rpy="0 0 0" />
+      <mass
+        value="0.35871" />
+      <inertia
+        ixx="0.0003145"
+        ixy="-1.6766E-06"
+        ixz="-9.9068E-06"
+        iyy="0.00044328"
+        iyz="-2.576E-06"
+        izz="0.00020521" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="${0.5*(-1+reflect_y)*pi} ${0.5*(-1+reflect_x)*pi} 0" />
+      <geometry>
+        <mesh
+          filename="${mesh_folder}/shoulder.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="${leg_colour}" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="${0.5*(-1+reflect_y)*pi} ${0.5*(-1+reflect_x)*pi} 0" />
+      <geometry>
+        <mesh
+          filename="${mesh_folder}/shoulder.stl" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="${prefix}1_"
+    type="continuous">
+    <origin
+      xyz="${reflect_x*shoulder_x} ${reflect_y*shoulder_y} ${-shoulder_z}"
+      rpy="${shoulder_angle_default} 0 0" />
+    <parent
+      link="${parent}" />
+    <child
+      link="${prefix}1" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      effort="200"
+      velocity="10" />
+  </joint>
+
+  <link
+    name="${prefix}2">
+    <inertial>
+      <origin
+        xyz="-0.26 0 -0.05"
+        rpy="0 0 0" />
+      <mass
+        value="0.421019079143915" />
+      <inertia
+        ixx="0.000307852923020911"
+        ixy="3.19242906120105E-06"
+        ixz="-6.61267552894505E-06"
+        iyy="0.000852068112953311"
+        iyz="2.25635506155653E-06"
+        izz="0.00065120696734265" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="${mesh_folder}/${femur}.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="${leg_colour}" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="${mesh_folder}/${femur}.stl" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <joint
+    name="${prefix}2_"
+    type="continuous">
+    <origin
+      xyz="${reflect_x*femur_x} ${reflect_y*femur_y} ${femur_z}"
+      rpy="0 ${-femur_angle_default} 0" />
+    <parent
+      link="${prefix}1" />
+    <child
+      link="${prefix}2" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      effort="200"
+      velocity="10" />
+  </joint>
+  
+  <link
+    name="${prefix}3">
+    <inertial>
+      <origin
+        xyz="0.15 0 0"
+        rpy="0 0 0" />
+      <mass
+        value="0.155935206674882" />
+      <inertia
+        ixx="0.000710580255126011"
+        ixy="-4.6955016006765E-08"
+        ixz="5.54725888406585E-08"
+        iyy="0.0011552209842016"
+        iyz="5.86784342700648E-08"
+        izz="0.000459413413981537" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="${mesh_folder}/tibia.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="${leg_colour}" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="${mesh_folder}/tibia.stl" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <joint
+    name="${prefix}3_"
+    type="continuous">
+    <origin
+      xyz="${-tibia_x} ${reflect_y*tibia_y} ${-tibia_z}"
+      rpy="0 ${tibia_angle_default} 0" />
+    <parent
+      link="${prefix}2" />
+    <child
+      link="${prefix}3" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      effort="200"
+      velocity="10" />
+  </joint>
+  
+  <link 
+      name="${prefix}3_f" >
+      <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <mass
+        value="0.002" />
+      <inertia
+        ixx="0.00001"
+        ixy="0"
+        ixz="0"
+        iyy="0.00001"
+        iyz="0"
+        izz="0.00001" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <sphere
+          radius="0.005" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="${leg_colour}" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <sphere
+          radius="0.005" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="${prefix}3_f_"
+    type="fixed">
+    <origin
+      xyz="0.29 0 0"
+      rpy="0 ${-pi/2} 0" />
+    <parent
+      link="${prefix}3" />
+    <child
+      link="${prefix}3_f" />
+  </joint>
+
+</xacro:macro>
+
+
+</robot>
+

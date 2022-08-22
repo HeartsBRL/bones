@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="bones">
+
+<xacro:include filename="$(find bones_description)/urdf/bones_leg.urdf.xacro"/>
+
+<!-- ros control plugin -->
+  <gazebo>
+      <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+          <robotNamespace>/ruff</robotNamespace>
+          <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+      </plugin>
+  </gazebo>
+  
+<!-- adding imu sensor to the base link -->
+<!--IMU : joint , link , sensor  -->
+
+<xacro:property name="mesh_folder" value="package://bones_description/meshes" />
+<xacro:property name="frame_colour" value="0.7 0.7 0.9 1" />
+
+<link
+  name="root_link">
+</link>
+<joint
+  name="root_joint"
+  type="fixed">
+  <origin
+    xyz="0 0 0"
+    rpy="0 0 0" />
+  <parent
+    link="root_link" />
+  <child
+    link="base_link" />
+</joint>
+
+<link
+  name="base_link">
+  <inertial>
+    <origin
+      xyz="0 0 -0.02"
+      rpy="0 0 0" />
+    <mass
+      value="2.49007846050021" />
+    <inertia
+      ixx="0.00489492059233199"
+      ixy="-1.59495229293445E-11"
+      ixz="-2.61866110672266E-14"
+      iyy="0.00625744875770968"
+      iyz="7.8598187747419E-15"
+      izz="0.00969112831967179" />
+  </inertial>
+  <visual>
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <geometry>
+      <mesh
+        filename="${mesh_folder}/base_link.stl" /> 
+    </geometry>
+    <material
+      name="">
+      <color
+        rgba="${frame_colour}" />
+    </material>
+  </visual>
+  <collision>
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <geometry>
+      <mesh
+        filename="${mesh_folder}/base_link.stl" />
+    </geometry>
+  </collision>
+</link>
+
+<!-- Leg definitions -->
+<xacro:bones_leg parent="base_link" reflect_x="1" reflect_y="1" />    <!-- Front left  -->
+<xacro:bones_leg parent="base_link" reflect_x="1" reflect_y="-1" />   <!-- Front right -->
+<xacro:bones_leg parent="base_link" reflect_x="-1" reflect_y="1" />   <!-- Rear left   -->
+<xacro:bones_leg parent="base_link" reflect_x="-1" reflect_y="-1" />  <!-- Rear right  -->
+
+
+<!-- Transmission for the joints -->
+<transmission name="FL1_trans">
+<type>transmission_interface/SimpleTransmission</type>
+<actuator name="FL1_motor">
+  <mechanicalReduction>1</mechanicalReduction>
+  <hardwareInterface>EffortJointInterface</hardwareInterface>
+</actuator>
+<joint name="FL1_">
+  <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+</joint>
+</transmission>
+
+<transmission name="FL2_trans">
+<type>transmission_interface/SimpleTransmission</type>
+<actuator name="FL2_motor">
+  <mechanicalReduction>1</mechanicalReduction>
+</actuator>
+<joint name="FL2_">
+  <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+</joint>
+</transmission>
+
+<transmission name="FL3_trans">
+<type>transmission_interface/SimpleTransmission</type>
+<actuator name="FL3_motor">
+  <mechanicalReduction>1</mechanicalReduction>
+</actuator>
+<joint name="FL3_">
+  <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+</joint>
+</transmission>
+
+<transmission name="FR1_trans">
+<type>transmission_interface/SimpleTransmission</type>
+<actuator name="FR1_motor">
+  <mechanicalReduction>1</mechanicalReduction>
+</actuator>
+<joint name="FR1_">
+  <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+</joint>
+</transmission>
+
+<transmission name="FR2_trans">
+<type>transmission_interface/SimpleTransmission</type>
+<actuator name="FR2_motor">
+  <mechanicalReduction>1</mechanicalReduction>
+</actuator>
+<joint name="FR2_">
+  <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+</joint>
+</transmission>
+
+<transmission name="FR3_trans">
+<type>transmission_interface/SimpleTransmission</type>
+<actuator name="FR3_motor">
+  <mechanicalReduction>1</mechanicalReduction>
+</actuator>
+<joint name="FR3_">
+  <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+</joint>
+</transmission>
+
+<transmission name="RL1_trans">
+<type>transmission_interface/SimpleTransmission</type>
+<actuator name="RL1_motor">
+  <mechanicalReduction>1</mechanicalReduction>
+</actuator>
+<joint name="RL1_">
+  <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+</joint>
+</transmission>
+
+<transmission name="RL2_trans">
+<type>transmission_interface/SimpleTransmission</type>
+<actuator name="RL2_motor">
+  <mechanicalReduction>1</mechanicalReduction>
+</actuator>
+<joint name="RL2_">
+  <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+</joint>
+</transmission>
+
+<transmission name="RL3_trans">
+<type>transmission_interface/SimpleTransmission</type>
+<actuator name="RL3_motor">
+  <mechanicalReduction>1</mechanicalReduction>
+</actuator>
+<joint name="RL3_">
+  <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+</joint>
+</transmission>
+
+<transmission name="RR1_trans">
+<type>transmission_interface/SimpleTransmission</type>
+<actuator name="RR1_motor">
+  <mechanicalReduction>1</mechanicalReduction>
+</actuator>
+<joint name="RR1_">
+  <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+</joint>
+</transmission>
+
+<transmission name="RR2_trans">
+<type>transmission_interface/SimpleTransmission</type>
+<actuator name="RR2_motor">
+  <mechanicalReduction>1</mechanicalReduction>
+</actuator>
+<joint name="RR2_">
+  <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+</joint>
+</transmission>
+
+<transmission name="RR3_trans">
+<type>transmission_interface/SimpleTransmission</type>
+<actuator name="RR3_motor">
+  <mechanicalReduction>1</mechanicalReduction>
+</actuator>
+<joint name="RR3_">
+  <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+</joint>
+</transmission>
+
+</robot>
