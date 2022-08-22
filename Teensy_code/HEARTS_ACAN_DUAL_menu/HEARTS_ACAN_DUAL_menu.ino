@@ -205,10 +205,11 @@ void loop () {
     /////////////
     ///////////--------Menu-------------/////////////////////--------Menu-------------//////////
     //comment out unused functions
-    //input_command_bus_1();
+    // input_command_bus_1(); //good one
+    input_command_bus_1_gait();
     //input_command_bus_2();
     //taps_test();
-    leg_test();
+    // leg_test();
     ///////////--------Menu-------------/////////////////////--------Menu-------------//////////
   }
 
@@ -342,7 +343,7 @@ void leg_test() {
     Serial.println("--end");
   }
   //--
-    //--
+  //--
   Serial.println("Input actuator 3 position as int: ");
   // Actuator id i.e define 1 = 0x141, velocity(check max), position
   while (!Serial.available()) {
@@ -764,5 +765,76 @@ void send_bus_2() {
     Serial.println ("Send failure") ;
   }
 }
+/////////////////////////////////////////////////////////////////////
+//position 325000 - 1 roughly ~ angle times 903
+//RMD_ID = 0x143;
 
+const float cx = 2; //coxa
+const float fm = 6.2; //femur
+const float tb = 8.3; // tibia
+float L, L1;
+float alpha, alpha1, alpha2, beta, gama;
+
+void input_command_bus_1_gait() {
+  int Angles_to_pos = 903;
+  int joint_angles[5] = {10, 90, 180, 90, 10};
+  int gait_steps = 0;
+
+
+
+  Serial.println("Bus 1, Input gait steps as Int: ");
+  // Actuator id i.e define 1 = 0x141, velocity(check max), position
+  while (!Serial.available()) {
+  }; //remove this blocking function later, its just for a testing
+
+
+  if (Serial.available()) {
+    gait_steps = Serial.parseInt();
+    Serial.println("Gait steps: ");
+    Serial.println(gait_steps);
+    Serial.println("--end");
+  }
+
+  IK_xyz(2, 4, 6); //contoh x,y,z
+  Serial.print("gama= ");
+  Serial.print(gama);
+  Serial.print(", alpha= ");
+  Serial.print(alpha);
+  Serial.print(", beta= ");
+  Serial.print(beta);
+  Serial.println();
+
+
+  for (int i = 0; i < gait_steps; i++) {
+
+    GenPos = (903 * joint_angles[i]);
+    RMD_ID = 0x143;
+    frameTx.id = RMD_ID;
+
+
+    /////////////
+    frameTx.data[0] = 0xA4;
+    frameTx.data[1] = 0x00;
+    frameTx.data[2] = GenVel;
+    frameTx.data[3] = GenVel >> 8;
+    frameTx.data[4] = GenPos;
+    frameTx.data[5] = GenPos >> 8;
+    frameTx.data[6] = GenPos >> 16;
+    frameTx.data[7] = GenPos >> 24;
+
+    send_bus_1();
+    delay(3000);
+  }
+}
+////////////////////////////////////////
+void IK_xyz(float x, float y, float z)
+{
+  L1 = sqrt(sq(x) + sq(y));
+  gama = atan(x / y) / PI * 180;
+  L = sqrt(sq(L1 - cx) + sq(z));
+  beta = acos((sq(tb) + sq(fm) - sq(L)) / (2 * tb * fm)) / PI * 180;
+  alpha1 = acos(z / L) / PI * 180;
+  alpha2 = acos((sq(fm) + sq(L) - sq(tb)) / (2 * fm * L)) / PI * 180;
+  alpha = alpha1 + alpha2;
+}
 //——————————————————————————————————————————————————————————————————————————————
