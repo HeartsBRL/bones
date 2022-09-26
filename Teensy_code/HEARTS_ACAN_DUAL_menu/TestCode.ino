@@ -76,6 +76,13 @@ CANMessage frameTx;
 CANMessage frameTx2;
 CANMessage frameRx2;
 
+//——————————————————————————————————————————————————————————————————————————————
+const float cx = 2; //coxa
+const float fm = 6.2; //femur
+const float tb = 8.3; // tibia
+float L, L1;
+float alpha, alpha1, alpha2, beta, gama;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
           void setup () {
@@ -213,7 +220,31 @@ void loop() {
 
     ///////////--------Menu-------------/////////////////////--------Menu-------------//////////
   }
-
+  if (can.available ()) {
+    can.receive (frameRx) ;
+    gReceivedFrameCount ++ ;
+    Serial.print ("Received on bus 1: ") ;
+    Serial.println (gReceivedFrameCount) ;
+    Serial.print ("RMD ID: ") ;
+    Serial.println (frameTx.id, HEX);
+    Serial.print((frameRx.data[6] << 8) | frameRx.data[7]);
+    Serial.print("\t");
+    EstPos = (frameRx.data[7] << 8) | frameRx.data[6];
+    if (EstPos > 18000) {
+      GenPos = -36000 + EstPos;
+    } else {
+      GenPos = EstPos;
+    }
+    Serial.print(frameRx.data[6], HEX);
+    Serial.print("\t");
+    Serial.print(frameRx.data[7], HEX);
+    Serial.print("\t");
+    Serial.print(EstPos);
+    Serial.print("\t");
+    Serial.println(GenPos);
+  }
+  ///////////--------Bus 2 receive-------------//////////
+  receive_bus_2();
 }
 
 
@@ -298,6 +329,64 @@ void send_bus_1() {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void receive_bus_2() {
+  if (can2.available ()) {
+    can2.receive (frameRx2) ;
+    gReceivedFrameCount2 ++ ;
+    Serial.print ("Received on bus 2: ") ;
+    Serial.println (gReceivedFrameCount2) ;
+    Serial.print ("RMD ID: ") ;
+    Serial.println (frameTx2.id, HEX);
+    Serial.print((frameRx2.data[6] << 8) | frameRx2.data[7]);
+    Serial.print("\t");
+    EstPos = (frameRx2.data[7] << 8) | frameRx2.data[6];
+    if (EstPos > 18000) {
+      GenPos = -36000 + EstPos;
+    } else {
+      GenPos = EstPos;
+    }
+    Serial.print(frameRx2.data[6], HEX);
+    Serial.print("\t");
+    Serial.print(frameRx2.data[7], HEX);
+    Serial.print("\t");
+    Serial.print(EstPos);
+    Serial.print("\t");
+    Serial.println(GenPos);
+  }
+
+  else {
+    delay (5);
+
+    if (can2.available ()) {
+      can2.receive (frameRx2) ;
+      gReceivedFrameCount2 ++ ;
+      Serial.print ("Received on bus 2: ") ;
+      Serial.println (gReceivedFrameCount2) ;
+      Serial.print ("RMD ID: ") ;
+      Serial.println (frameTx2.id, HEX);
+      Serial.print((frameRx2.data[6] << 8) | frameRx2.data[7]);
+      Serial.print("\t");
+      EstPos = (frameRx2.data[7] << 8) | frameRx2.data[6];
+      if (EstPos > 18000) {
+        GenPos = -36000 + EstPos;
+      } else {
+        GenPos = EstPos;
+      }
+      Serial.print(frameRx2.data[6], HEX);
+      Serial.print("\t");
+      Serial.print(frameRx2.data[7], HEX);
+      Serial.print("\t");
+      Serial.print(EstPos);
+      Serial.print("\t");
+      Serial.println(GenPos);
+    }
+  }
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void IK_xyz(float x, float y, float z)
 {
   L1 = sqrt(sq(x) + sq(y));
@@ -310,3 +399,7 @@ void IK_xyz(float x, float y, float z)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
