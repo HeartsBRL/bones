@@ -84,6 +84,7 @@ int BLeft_Knee = 0x142;
 
 
 int RMD_ID = 0x142;
+int RMD_ID2 = 0x142;
 
 //——————————————————————————————————————————————————————————————————————————————
 int RMD_ID_Select = 0;
@@ -209,6 +210,20 @@ void setup()
             frameTx.data[6] = 0x00;
             frameTx.data[7] = 0x00;
 
+            //--------------Back Legs -----------------//
+
+            frameTx2.len = 8;
+            frameTx2.id = RMD_ID2;
+            //request initial position
+            frameTx2.data[0] = 0x94;// uint8_t{0xA6, 0, 0, 0, 0, 0, 0, 0};
+            frameTx2.data[1] = 0x00;
+            frameTx2.data[2] = 0x00;
+            frameTx2.data[3] = 0x00;
+            frameTx2.data[4] = 0x00;
+            frameTx2.data[5] = 0x00;
+            frameTx2.data[6] = 0x00;
+            frameTx2.data[7] = 0x00;
+
 }
 
 void loop() {
@@ -252,9 +267,29 @@ void loop() {
               send_bus_1();
               receive_bus_1();
 
-              PosKi = frameRx.data[7] * 2;
+              
+              currKp = frameRx.data[2];
+              currKi = frameRx.data[3];
+              speedKp = frameRx.data[4];
+              speedKi = frameRx.data[5];
+              PosKp = frameRx.data[6];
+              PosKi = frameRx.data[7];
 
-              frameTx.id = RMD_ID;
+              //Writng new values to the actuator
+
+              frameTx.id = 0x146;
+              frameTx.data[0] = 0x30;
+              frameTx.data[1] = 0x00;
+              frameTx.data[2] = 0x00;
+              frameTx.data[3] = 0x00;
+              frameTx.data[4] = 0x00;
+              frameTx.data[5] = 0x00;
+              frameTx.data[6] = 0x00;
+              frameTx.data[7] = 0x00;
+          
+              send_bus_1();
+
+              frameTx.id = 0x146;
               frameTx.data[0] = 0x31;
               frameTx.data[1] = 0x00;
               frameTx.data[2] = currKp;
@@ -262,12 +297,54 @@ void loop() {
               frameTx.data[4] = speedKp;
               frameTx.data[5] = speedKi;
               frameTx.data[6] = PosKp;
-              frameTx.data[7] = PosKi;
-              //frameTx.data[7] = 0x19;
+              frameTx.data[7] = PosKi;  // potentially copying ki dont know why?
+             
+             
           
               send_bus_1();
 
-              frameTx.id = RMD_ID;
+              frameTx.id = 0x146;
+              frameTx.data[0] = 0x30;
+              frameTx.data[1] = 0x00;
+              frameTx.data[2] = 0x00;
+              frameTx.data[3] = 0x00;
+              frameTx.data[4] = 0x00;
+              frameTx.data[5] = 0x00;
+              frameTx.data[6] = 0x00;
+              frameTx.data[7] = 0x00;
+          
+              send_bus_1();
+
+              
+              receive_bus_1();
+
+              frameTx.id = 0x144;
+              frameTx.data[0] = 0x30;
+              frameTx.data[1] = 0x00;
+              frameTx.data[2] = 0x00;
+              frameTx.data[3] = 0x00;
+              frameTx.data[4] = 0x00;
+              frameTx.data[5] = 0x00;
+              frameTx.data[6] = 0x00;
+              frameTx.data[7] = 0x00;
+          
+              send_bus_1();
+
+              frameTx.id = 0x144;
+              frameTx.data[0] = 0x31;
+              frameTx.data[1] = 0x00;
+              frameTx.data[2] = currKp;
+              frameTx.data[3] = currKi;
+              frameTx.data[4] = speedKp;
+              frameTx.data[5] = speedKi;
+              frameTx.data[6] = PosKp;
+              frameTx.data[7] = PosKi;  // potentially copying ki dont know why?
+             
+             
+          
+              send_bus_1();
+
+              frameTx.id = 0x144;
               frameTx.data[0] = 0x30;
               frameTx.data[1] = 0x00;
               frameTx.data[2] = 0x00;
@@ -279,7 +356,386 @@ void loop() {
           
               send_bus_1();
               receive_bus_1();
+
+
+
+              //------------------Right Leg------------------------------//
+
+
+              frameTx.id = 0x141;
+              frameTx.data[0] = 0x30;
+              frameTx.data[1] = 0x00;
+              frameTx.data[2] = 0x00;
+              frameTx.data[3] = 0x00;
+              frameTx.data[4] = 0x00;
+              frameTx.data[5] = 0x00;
+              frameTx.data[6] = 0x00;
+              frameTx.data[7] = 0x00;
+          
+              send_bus_1();
+
+              frameTx.id = 0x141;
+              frameTx.data[0] = 0x31;
+              frameTx.data[1] = 0x00;
+              frameTx.data[2] = currKp;
+              frameTx.data[3] = currKi;
+              frameTx.data[4] = speedKp;
+              frameTx.data[5] = speedKi;
+              frameTx.data[6] = PosKp;
+              frameTx.data[7] = PosKi;  // potentially copying ki dont know why?
+             
+             
+          
+              send_bus_1();
+
+              frameTx.id = 0x141;
+              frameTx.data[0] = 0x30;
+              frameTx.data[1] = 0x00;
+              frameTx.data[2] = 0x00;
+              frameTx.data[3] = 0x00;
+              frameTx.data[4] = 0x00;
+              frameTx.data[5] = 0x00;
+              frameTx.data[6] = 0x00;
+              frameTx.data[7] = 0x00;
+          
+              send_bus_1();
+
               
+              receive_bus_1();
+
+              frameTx.id = 0x142;
+              frameTx.data[0] = 0x30;
+              frameTx.data[1] = 0x00;
+              frameTx.data[2] = 0x00;
+              frameTx.data[3] = 0x00;
+              frameTx.data[4] = 0x00;
+              frameTx.data[5] = 0x00;
+              frameTx.data[6] = 0x00;
+              frameTx.data[7] = 0x00;
+          
+              send_bus_1();
+
+              frameTx.id = 0x142;
+              frameTx.data[0] = 0x31;
+              frameTx.data[1] = 0x00;
+              frameTx.data[2] = currKp;
+              frameTx.data[3] = currKi;
+              frameTx.data[4] = speedKp;
+              frameTx.data[5] = speedKi;
+              frameTx.data[6] = PosKp;
+              frameTx.data[7] = PosKi;  // potentially copying ki dont know why?
+             
+             
+          
+              send_bus_1();
+
+              frameTx.id = 0x142;
+              frameTx.data[0] = 0x30;
+              frameTx.data[1] = 0x00;
+              frameTx.data[2] = 0x00;
+              frameTx.data[3] = 0x00;
+              frameTx.data[4] = 0x00;
+              frameTx.data[5] = 0x00;
+              frameTx.data[6] = 0x00;
+              frameTx.data[7] = 0x00;
+          
+              send_bus_1();
+              receive_bus_1();
+
+
+              frameTx.id = 0x143;
+              frameTx.data[0] = 0x30;
+              frameTx.data[1] = 0x00;
+              frameTx.data[2] = 0x00;
+              frameTx.data[3] = 0x00;
+              frameTx.data[4] = 0x00;
+              frameTx.data[5] = 0x00;
+              frameTx.data[6] = 0x00;
+              frameTx.data[7] = 0x00;
+          
+              send_bus_1();
+
+              frameTx.id = 0x143;
+              frameTx.data[0] = 0x31;
+              frameTx.data[1] = 0x00;
+              frameTx.data[2] = currKp;
+              frameTx.data[3] = currKi;
+              frameTx.data[4] = speedKp;
+              frameTx.data[5] = speedKi;
+              frameTx.data[6] = PosKp;
+              frameTx.data[7] = PosKi;  // potentially copying ki dont know why?
+             
+             
+          
+              send_bus_1();
+
+              frameTx.id = 0x143;
+              frameTx.data[0] = 0x30;
+              frameTx.data[1] = 0x00;
+              frameTx.data[2] = 0x00;
+              frameTx.data[3] = 0x00;
+              frameTx.data[4] = 0x00;
+              frameTx.data[5] = 0x00;
+              frameTx.data[6] = 0x00;
+              frameTx.data[7] = 0x00;
+          
+              send_bus_1();
+              receive_bus_1();
+
+
+
+              //----------------------------Back Legs----------------------------//
+
+
+              frameTx2.id = 0x141;
+              frameTx2.data[0] = 0x30;
+              frameTx2.data[1] = 0x00;
+              frameTx2.data[2] = 0x00;
+              frameTx2.data[3] = 0x00;
+              frameTx2.data[4] = 0x00;
+              frameTx2.data[5] = 0x00;
+              frameTx2.data[6] = 0x00;
+              frameTx2.data[7] = 0x00;
+          
+              send_bus_2();
+
+              frameTx2.id = 0x141;
+              frameTx2.data[0] = 0x31;
+              frameTx2.data[1] = 0x00;
+              frameTx2.data[2] = currKp;
+              frameTx2.data[3] = currKi;
+              frameTx2.data[4] = speedKp;
+              frameTx2.data[5] = speedKi;
+              frameTx2.data[6] = PosKp;
+              frameTx2.data[7] = PosKi;  // potentially copying ki dont know why?
+             
+             
+          
+              send_bus_2();
+
+              frameTx2.id = 0x141;
+              frameTx2.data[0] = 0x30;
+              frameTx2.data[1] = 0x00;
+              frameTx2.data[2] = 0x00;
+              frameTx2.data[3] = 0x00;
+              frameTx2.data[4] = 0x00;
+              frameTx2.data[5] = 0x00;
+              frameTx2.data[6] = 0x00;
+              frameTx2.data[7] = 0x00;
+          
+              send_bus_2();
+
+              
+              receive_bus_2();
+
+
+              frameTx2.id = 0x142;
+              frameTx2.data[0] = 0x30;
+              frameTx2.data[1] = 0x00;
+              frameTx2.data[2] = 0x00;
+              frameTx2.data[3] = 0x00;
+              frameTx2.data[4] = 0x00;
+              frameTx2.data[5] = 0x00;
+              frameTx2.data[6] = 0x00;
+              frameTx2.data[7] = 0x00;
+          
+              send_bus_2();
+
+              frameTx2.id = 0x142;
+              frameTx2.data[0] = 0x31;
+              frameTx2.data[1] = 0x00;
+              frameTx2.data[2] = currKp;
+              frameTx2.data[3] = currKi;
+              frameTx2.data[4] = speedKp;
+              frameTx2.data[5] = speedKi;
+              frameTx2.data[6] = PosKp;
+              frameTx2.data[7] = PosKi;  // potentially copying ki dont know why?
+             
+             
+          
+              send_bus_2();
+
+              frameTx2.id = 0x142;
+              frameTx2.data[0] = 0x30;
+              frameTx2.data[1] = 0x00;
+              frameTx2.data[2] = 0x00;
+              frameTx2.data[3] = 0x00;
+              frameTx2.data[4] = 0x00;
+              frameTx2.data[5] = 0x00;
+              frameTx2.data[6] = 0x00;
+              frameTx2.data[7] = 0x00;
+          
+              send_bus_2();
+
+              
+              receive_bus_2();
+
+              frameTx2.id = 0x143;
+              frameTx2.data[0] = 0x30;
+              frameTx2.data[1] = 0x00;
+              frameTx2.data[2] = 0x00;
+              frameTx2.data[3] = 0x00;
+              frameTx2.data[4] = 0x00;
+              frameTx2.data[5] = 0x00;
+              frameTx2.data[6] = 0x00;
+              frameTx2.data[7] = 0x00;
+          
+              send_bus_2();
+
+              frameTx2.id = 0x143;
+              frameTx2.data[0] = 0x31;
+              frameTx2.data[1] = 0x00;
+              frameTx2.data[2] = currKp;
+              frameTx2.data[3] = currKi;
+              frameTx2.data[4] = speedKp;
+              frameTx2.data[5] = speedKi;
+              frameTx2.data[6] = PosKp;
+              frameTx2.data[7] = PosKi;  // potentially copying ki dont know why?
+             
+             
+          
+              send_bus_2();
+
+              frameTx2.id = 0x143;
+              frameTx2.data[0] = 0x30;
+              frameTx2.data[1] = 0x00;
+              frameTx2.data[2] = 0x00;
+              frameTx2.data[3] = 0x00;
+              frameTx2.data[4] = 0x00;
+              frameTx2.data[5] = 0x00;
+              frameTx2.data[6] = 0x00;
+              frameTx2.data[7] = 0x00;
+          
+              send_bus_2();
+
+              
+              receive_bus_2();
+
+         //--------------------------Left Legs-------------------//
+         
+              frameTx2.id = 0x144;
+              frameTx2.data[0] = 0x30;
+              frameTx2.data[1] = 0x00;
+              frameTx2.data[2] = 0x00;
+              frameTx2.data[3] = 0x00;
+              frameTx2.data[4] = 0x00;
+              frameTx2.data[5] = 0x00;
+              frameTx2.data[6] = 0x00;
+              frameTx2.data[7] = 0x00;
+          
+              send_bus_2();
+
+              frameTx2.id = 0x144;
+              frameTx2.data[0] = 0x31;
+              frameTx2.data[1] = 0x00;
+              frameTx2.data[2] = currKp;
+              frameTx2.data[3] = currKi;
+              frameTx2.data[4] = speedKp;
+              frameTx2.data[5] = speedKi;
+              frameTx2.data[6] = PosKp;
+              frameTx2.data[7] = PosKi;  // potentially copying ki dont know why?
+             
+             
+          
+              send_bus_2();
+
+              frameTx2.id = 0x144;
+              frameTx2.data[0] = 0x30;
+              frameTx2.data[1] = 0x00;
+              frameTx2.data[2] = 0x00;
+              frameTx2.data[3] = 0x00;
+              frameTx2.data[4] = 0x00;
+              frameTx2.data[5] = 0x00;
+              frameTx2.data[6] = 0x00;
+              frameTx2.data[7] = 0x00;
+          
+              send_bus_2();
+
+              
+              receive_bus_2();
+
+              frameTx2.id = 0x145;
+              frameTx2.data[0] = 0x30;
+              frameTx2.data[1] = 0x00;
+              frameTx2.data[2] = 0x00;
+              frameTx2.data[3] = 0x00;
+              frameTx2.data[4] = 0x00;
+              frameTx2.data[5] = 0x00;
+              frameTx2.data[6] = 0x00;
+              frameTx2.data[7] = 0x00;
+          
+              send_bus_2();
+
+              frameTx2.id = 0x145;
+              frameTx2.data[0] = 0x31;
+              frameTx2.data[1] = 0x00;
+              frameTx2.data[2] = currKp;
+              frameTx2.data[3] = currKi;
+              frameTx2.data[4] = speedKp;
+              frameTx2.data[5] = speedKi;
+              frameTx2.data[6] = PosKp;
+              frameTx2.data[7] = PosKi;  // potentially copying ki dont know why?
+             
+             
+          
+              send_bus_2();
+
+              frameTx2.id = 0x145;
+              frameTx2.data[0] = 0x30;
+              frameTx2.data[1] = 0x00;
+              frameTx2.data[2] = 0x00;
+              frameTx2.data[3] = 0x00;
+              frameTx2.data[4] = 0x00;
+              frameTx2.data[5] = 0x00;
+              frameTx2.data[6] = 0x00;
+              frameTx2.data[7] = 0x00;
+          
+              send_bus_2();
+
+              
+              receive_bus_2();
+              
+
+              frameTx2.id = 0x146;
+              frameTx2.data[0] = 0x30;
+              frameTx2.data[1] = 0x00;
+              frameTx2.data[2] = 0x00;
+              frameTx2.data[3] = 0x00;
+              frameTx2.data[4] = 0x00;
+              frameTx2.data[5] = 0x00;
+              frameTx2.data[6] = 0x00;
+              frameTx2.data[7] = 0x00;
+          
+              send_bus_2();
+
+              frameTx2.id = 0x146;
+              frameTx2.data[0] = 0x31;
+              frameTx2.data[1] = 0x00;
+              frameTx2.data[2] = currKp;
+              frameTx2.data[3] = currKi;
+              frameTx2.data[4] = speedKp;
+              frameTx2.data[5] = speedKi;
+              frameTx2.data[6] = PosKp;
+              frameTx2.data[7] = PosKi;  // potentially copying ki dont know why?
+             
+             
+          
+              send_bus_2();
+
+              frameTx2.id = 0x146;
+              frameTx2.data[0] = 0x30;
+              frameTx2.data[1] = 0x00;
+              frameTx2.data[2] = 0x00;
+              frameTx2.data[3] = 0x00;
+              frameTx2.data[4] = 0x00;
+              frameTx2.data[5] = 0x00;
+              frameTx2.data[6] = 0x00;
+              frameTx2.data[7] = 0x00;
+          
+              send_bus_2();
+
+              
+              receive_bus_2();
               
 }
 
@@ -287,6 +743,7 @@ void loop() {
 void send_bus_1() {
   
   const bool ok = can.tryToSend (frameTx) ;
+  delay(2);  //delay not optimized
   if (ok) {
     gSentFrameCount += 1 ;
     Serial.print ("Sent on bus 1: ") ;
@@ -299,6 +756,7 @@ void send_bus_1() {
 }
 
 void send_bus_2() {
+  delay(2);
   const bool ok = can2.tryToSend (frameTx2) ;
   if (ok) {
     gSentFrameCount2 += 1 ;
@@ -326,22 +784,20 @@ void receive_bus_1() {
       Serial.print("\t");
       Serial.print(frameRx.data[1], HEX);
       Serial.print("\t");
-      currKp = frameRx2.data[1];
       Serial.print(frameRx.data[2], HEX);
       Serial.print("\t");
-      currKi = frameRx2.data[2];
       Serial.print(frameRx.data[3], HEX);
       Serial.print("\t");
-      speedKp = frameRx2.data[3];
+
       Serial.print(frameRx.data[4], HEX);
       Serial.print("\t");
-      speedKi = frameRx2.data[4];
+
       Serial.print(frameRx.data[5], HEX);
       Serial.print("\t");
-      PosKp = frameRx2.data[5];
+
       Serial.print(frameRx.data[6], HEX);
       Serial.print("\t");
-      PosKi = frameRx.data[7];
+
       Serial.print(frameRx.data[7], HEX);
       Serial.println("\t");
 
@@ -364,23 +820,97 @@ void receive_bus_1() {
       Serial.print("\t");
       Serial.print(frameRx.data[1], HEX);
       Serial.print("\t");
-      currKp = frameRx2.data[1];
+  
       Serial.print(frameRx.data[2], HEX);
       Serial.print("\t");
-      currKi = frameRx2.data[2];
+ 
       Serial.print(frameRx.data[3], HEX);
       Serial.print("\t");
-      speedKp = frameRx2.data[3];
+  
       Serial.print(frameRx.data[4], HEX);
       Serial.print("\t");
-      speedKi = frameRx2.data[4];
+    
       Serial.print(frameRx.data[5], HEX);
       Serial.print("\t");
-      PosKp = frameRx2.data[5];
+     
       Serial.print(frameRx.data[6], HEX);
       Serial.print("\t");
-      PosKi = frameRx.data[7];
+  
       Serial.print(frameRx.data[7], HEX);
+      Serial.println("\t");
+    }
+  }
+}
+
+
+void receive_bus_2() {
+        
+  if (can2.available ()) {
+    can2.receive (frameRx2) ;
+    gReceivedFrameCount ++ ;
+      
+      Serial.print ("Received on bus 1: ") ;
+      Serial.println (gReceivedFrameCount) ;
+      Serial.print ("RMD ID: ") ;
+      Serial.println (frameRx2.id, HEX);
+      Serial.print("\t");
+      Serial.print(frameRx2.data[0], HEX);
+      Serial.print("\t");
+      Serial.print(frameRx2.data[1], HEX);
+      Serial.print("\t");
+      Serial.print(frameRx2.data[2], HEX);
+      Serial.print("\t");
+      Serial.print(frameRx2.data[3], HEX);
+      Serial.print("\t");
+
+      Serial.print(frameRx2.data[4], HEX);
+      Serial.print("\t");
+
+      Serial.print(frameRx2.data[5], HEX);
+      Serial.print("\t");
+
+      Serial.print(frameRx2.data[6], HEX);
+      Serial.print("\t");
+
+      Serial.print(frameRx2.data[7], HEX);
+      Serial.println("\t");
+
+  }
+
+  else {
+    delay (5);
+
+    if (can2.available ()) {
+          
+      can2.receive (frameRx2) ;
+      gReceivedFrameCount ++ ;
+      
+      Serial.print ("Received on bus 1: ") ;
+      Serial.println (gReceivedFrameCount) ;
+      Serial.print ("RMD ID: ") ;
+      Serial.println (frameTx2.id, HEX);
+      Serial.print("\t");
+      Serial.print(frameRx2.data[0], HEX);
+      Serial.print("\t");
+      Serial.print(frameRx2.data[1], HEX);
+      Serial.print("\t");
+  
+      Serial.print(frameRx2.data[2], HEX);
+      Serial.print("\t");
+ 
+      Serial.print(frameRx2.data[3], HEX);
+      Serial.print("\t");
+  
+      Serial.print(frameRx2.data[4], HEX);
+      Serial.print("\t");
+    
+      Serial.print(frameRx2.data[5], HEX);
+      Serial.print("\t");
+     
+      Serial.print(frameRx2.data[6], HEX);
+      Serial.print("\t");
+  
+      Serial.print(frameRx2.data[7], HEX);
       Serial.println("\t");
     }
   }
