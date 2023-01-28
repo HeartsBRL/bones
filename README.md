@@ -1,6 +1,9 @@
 # Bones
 HEARTS BRL robot dog BONES!
 
+First stand
+https://youtu.be/PB43hm6HJFw
+
 Actuators are RMDx8
 Commications to actuators via dual ACAN https://github.com/pierremolinaro/acan2515
 
